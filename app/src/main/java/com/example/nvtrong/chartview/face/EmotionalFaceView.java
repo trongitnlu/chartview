@@ -7,7 +7,9 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
+import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -166,5 +168,24 @@ public class EmotionalFaceView extends View implements View.OnClickListener {
     public void setHappinessState(int happinessState) {
         this.happinessState = happinessState;
         invalidate();
+    }
+
+    //Save state when rotation screen
+    @Nullable
+    @Override
+    protected Parcelable onSaveInstanceState() {
+        Bundle bundle = new Bundle();
+        bundle.putInt("HAPPINESS", happinessState);
+        bundle.putParcelable("SUPERSTATE", super.onSaveInstanceState());
+        return bundle;
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Parcelable state) {
+        if (state instanceof Bundle) {
+            happinessState = ((Bundle) state).getInt("HAPPINESS", HAPPY);
+            state = ((Bundle) state).getParcelable("SUPERSTATE");
+        }
+        super.onRestoreInstanceState(state);
     }
 }
